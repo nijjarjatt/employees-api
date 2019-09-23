@@ -10,7 +10,6 @@ import com.taleroid.employeesapi.entity.Employee;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class EmployeeDaoHibernateImpl implements EmployeeDao {
@@ -22,7 +21,6 @@ public class EmployeeDaoHibernateImpl implements EmployeeDao {
 	}
 	
 	@Override
-	@Transactional
 	public List<Employee> findAll() {
 		Session session = entityManager.unwrap(Session.class);
 		
@@ -31,6 +29,38 @@ public class EmployeeDaoHibernateImpl implements EmployeeDao {
 		List<Employee> employees = employeeQuery.getResultList();
 		
 		return employees;
+	}
+
+	@Override
+	public Employee findById(int theId) {
+		Session session = entityManager.unwrap(Session.class);
+		
+		Employee currentEmployee = session.get(Employee.class, theId);
+		
+		return currentEmployee;
+		
+		
+	}
+
+	@Override
+	public void saveEmployee(Employee theEmployee) {
+		Session session = entityManager.unwrap(Session.class);
+		session.saveOrUpdate(theEmployee);
+		
+	}
+
+	@Override
+	public void deleteEmployee(int id) {
+		Session session = entityManager.unwrap(Session.class);
+		
+		Query theQuery = session.createQuery("delete from Emmployee where id:=employeeId");
+		
+		theQuery.setParameter("employeeId", id);
+		
+		theQuery.executeUpdate();
+		
+		
+		
 	}
 
 }
