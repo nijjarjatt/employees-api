@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -35,9 +37,20 @@ public class EmployeeController {
 		Employee currentEmplpyee = employeeService.findById(emplpyeeId);
 		
 		if(currentEmplpyee == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Empoyee not found");
 		}
 		
 		return ResponseEntity.status(HttpStatus.OK).body(currentEmplpyee);
 	}
+	
+	@PostMapping("/employees")
+	public Employee addEmployee(@RequestBody Employee newEmployee) {
+		newEmployee.setId(0);
+		
+		employeeService.saveEmployee(newEmployee);
+		
+		return newEmployee;
+	}
+	
+	
 }
